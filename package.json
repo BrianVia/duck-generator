@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "pages:dev": "npm run build && cp -r functions dist/ && wrangler pages dev dist --port 3000",
     "deploy": "wrangler pages deploy dist"
   },
   "dependencies": {

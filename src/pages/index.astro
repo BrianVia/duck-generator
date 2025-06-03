@@ -37,9 +37,22 @@
             </div>
             
             <div class="mt-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
-              <input type="password" id="apiKey" placeholder="Enter your API key..." 
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              <label class="block text-sm font-medium text-gray-700 mb-2">API Key <span id="apiKeyLabel">(OpenAI)</span></label>
+              <div class="relative">
+                <input type="password" id="apiKey" placeholder="Enter your API key..." 
+                       class="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <button type="button" id="toggleApiKey" 
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                  <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="eyeClosedPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                    <path id="eyeOpenPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" style="display: none;"></path>
+                    <path id="eyeOpenPath2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" style="display: none;"></path>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -219,12 +232,40 @@
       const form = document.getElementById('duck-form');
       const providerSelect = document.getElementById('provider');
       const modelSelect = document.getElementById('model');
+      const apiKeyInput = document.getElementById('apiKey');
+      const apiKeyLabel = document.getElementById('apiKeyLabel');
       const loadingDiv = document.getElementById('loading');
       const resultDiv = document.getElementById('result');
       const generateBtn = document.getElementById('generateBtn');
       const generatedImage = document.getElementById('generatedImage');
       const downloadBtn = document.getElementById('downloadBtn');
       const generateAnotherBtn = document.getElementById('generateAnother');
+      const toggleApiKeyBtn = document.getElementById('toggleApiKey');
+      const eyeClosedPath = document.getElementById('eyeClosedPath');
+      const eyeOpenPath = document.getElementById('eyeOpenPath');
+      const eyeOpenPath2 = document.getElementById('eyeOpenPath2');
+
+      // Load saved API keys from localStorage
+      function loadSavedApiKeys() {
+        const savedOpenAIKey = localStorage.getItem('openai_api_key');
+        const savedGoogleKey = localStorage.getItem('google_api_key');
+        const currentProvider = providerSelect.value;
+        
+        if (currentProvider === 'openai' && savedOpenAIKey) {
+          apiKeyInput.value = savedOpenAIKey;
+        } else if (currentProvider === 'google' && savedGoogleKey) {
+          apiKeyInput.value = savedGoogleKey;
+        }
+      }
+
+      // Save API key to localStorage
+      function saveApiKey(provider, apiKey) {
+        if (provider === 'openai') {
+          localStorage.setItem('openai_api_key', apiKey);
+        } else if (provider === 'google') {
+          localStorage.setItem('google_api_key', apiKey);
+        }
+      }
 
       // Update model options when provider changes
       function updateModelOptions() {
@@ -238,11 +279,34 @@
           optionElement.textContent = option.label;
           modelSelect.appendChild(optionElement);
         });
+        
+        // Update API key label
+        apiKeyLabel.textContent = provider === 'openai' ? '(OpenAI)' : '(Google Gemini)';
+        
+        // Clear current key and load saved key for new provider
+        apiKeyInput.value = '';
+        loadSavedApiKeys();
       }
 
-      // Initialize model options
+      // Initialize model options and load saved keys
       updateModelOptions();
+      loadSavedApiKeys();
       providerSelect.addEventListener('change', updateModelOptions);
+      
+      // Save API key on blur/change
+      apiKeyInput.addEventListener('blur', () => {
+        const apiKey = apiKeyInput.value.trim();
+        if (apiKey) {
+          saveApiKey(providerSelect.value, apiKey);
+        }
+      });
+      
+      apiKeyInput.addEventListener('change', () => {
+        const apiKey = apiKeyInput.value.trim();
+        if (apiKey) {
+          saveApiKey(providerSelect.value, apiKey);
+        }
+      });
 
       // Build prompt from form data
       function buildPrompt() {
@@ -277,7 +341,7 @@
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const apiKey = document.getElementById('apiKey').value;
+        const apiKey = apiKeyInput.value;
         const provider = providerSelect.value;
         const model = modelSelect.value;
         
@@ -285,6 +349,9 @@
           alert('Please enter your API key!');
           return;
         }
+        
+        // Save API key to localStorage
+        saveApiKey(provider, apiKey);
         
         const prompt = buildPrompt();
         
@@ -307,10 +374,29 @@
             }),
           });
           
-          const data = await response.json();
+          console.log('Response status:', response.status);
+          console.log('Response headers:', response.headers);
+          
+          const responseText = await response.text();
+          console.log('Response text:', responseText);
+          
+          let data;
+          try {
+            data = JSON.parse(responseText);
+          } catch (parseError) {
+            console.error('JSON parse error:', parseError);
+            console.error('Response was:', responseText);
+            throw new Error('Server returned invalid JSON. Check console for details.');
+          }
           
           if (!response.ok) {
             throw new Error(data.error || 'Failed to generate image');
+          }
+          
+          console.log('API response data:', data);
+          
+          if (!data.imageUrl) {
+            throw new Error('No image URL returned from API');
           }
           
           // Show result
