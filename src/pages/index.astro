@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Duck Generator 🦆</title>
+
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content="Duck Generator 🦆" />
+    <meta property="og:description" content="Create amazing duck-themed video backgrounds for your meetings!" />
+    <meta property="og:image" content="https://duckgenerator.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://duckgenerator.com" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Duck Generator 🦆" />
+    <meta name="twitter:description" content="Create amazing duck-themed video backgrounds for your meetings!" />
+    <meta name="twitter:image" content="https://duckgenerator.com/og-image.png" />
   </head>
   <body class="bg-gradient-to-br from-blue-50 to-yellow-50 min-h-screen">
     <div class="container mx-auto px-4 py-8">
@@ -18,49 +33,91 @@
           <!-- API Configuration -->
           <div class="bg-gray-50 p-6 rounded-lg">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">🔑 API Configuration</h2>
-            
+
             <div class="grid md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">AI Provider</label>
-                <select id="provider" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <select
+                  id="provider"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                >
                   <option value="openai">OpenAI (DALL-E / GPT-4o)</option>
                   <option value="google">Google (Imagen)</option>
                 </select>
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Model</label>
-                <select id="model" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <select
+                  id="model"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                >
                   <!-- Options populated by JavaScript -->
                 </select>
               </div>
             </div>
-            
+
             <div class="mt-4">
               <label class="block text-sm font-medium text-gray-700 mb-2">
                 API Key <span id="apiKeyLabel">(OpenAI)</span>
                 <span class="relative inline-block ml-1 group">
-                  <svg class="w-4 h-4 inline-block text-gray-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <svg
+                    class="w-4 h-4 inline-block text-gray-400 cursor-help"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
-                  <span class="absolute z-10 invisible group-hover:visible bg-gray-800 text-white text-xs rounded-lg py-2 px-3 bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 text-center">
-                    Your API key is stored only in your browser's local storage and is never sent to our servers. It's passed directly to OpenAI/Google's APIs.
-                    <svg class="absolute text-gray-800 h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255"><polygon class="fill-current" points="0,0 127.5,127.5 255,0"/></svg>
+                  <span
+                    class="absolute z-10 invisible group-hover:visible bg-gray-800 text-white text-xs rounded-lg py-2 px-3 bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 text-center"
+                  >
+                    Your API key is stored only in your browser's local storage and is never sent to our servers. It's
+                    passed directly to OpenAI/Google's APIs.
+                    <svg class="absolute text-gray-800 h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255"
+                      ><polygon class="fill-current" points="0,0 127.5,127.5 255,0"></polygon></svg
+                    >
                   </span>
                 </span>
               </label>
               <div class="relative">
-                <input type="password" id="apiKey" placeholder="Enter your API key..." 
-                       class="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                <button type="button" id="toggleApiKey" 
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                <input
+                  type="password"
+                  id="apiKey"
+                  placeholder="Enter your API key..."
+                  class="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                />
+                <button
+                  type="button"
+                  id="toggleApiKey"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
                   <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path id="eyeClosedPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
-                    <path id="eyeOpenPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" style="display: none;"></path>
-                    <path id="eyeOpenPath2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" style="display: none;"></path>
+                    <path
+                      id="eyeClosedPath"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                    ></path>
+                    <path
+                      id="eyeOpenPath"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      style="display: none;"></path>
+                    <path
+                      id="eyeOpenPath2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      style="display: none;"></path>
                   </svg>
                 </button>
               </div>
@@ -70,11 +127,14 @@
           <!-- Duck Configuration -->
           <div class="bg-yellow-50 p-6 rounded-lg">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">🦆 Duck Settings</h2>
-            
+
             <div class="grid md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Number of Ducks</label>
-                <select id="duckCount" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <select
+                  id="duckCount"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                >
                   <option value="1">1 Duck</option>
                   <option value="2">2 Ducks</option>
                   <option value="3">3 Ducks</option>
@@ -83,10 +143,13 @@
                   <option value="20">A whole flock (20+)</option>
                 </select>
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Duck Activities</label>
-                <select id="activity" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <select
+                  id="activity"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                >
                   <option value="swimming">Swimming peacefully</option>
                   <option value="flying">Flying in formation</option>
                   <option value="dancing">Dancing</option>
@@ -107,7 +170,10 @@
           <!-- Environment -->
           <div class="bg-green-50 p-6 rounded-lg">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">🌍 Environment</h2>
-            <select id="environment" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+            <select
+              id="environment"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            >
               <option value="space">Outer space with stars and planets</option>
               <option value="beach">Tropical beach with palm trees</option>
               <option value="forest">Magical forest</option>
@@ -147,11 +213,14 @@
           <!-- Fun Options -->
           <div class="bg-purple-50 p-6 rounded-lg">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">✨ Fun Options</h2>
-            
+
             <div class="grid md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Duck Style</label>
-                <select id="style" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <select
+                  id="style"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                >
                   <option value="realistic">Realistic</option>
                   <option value="cartoon">Cartoon</option>
                   <option value="pixel">Pixel art</option>
@@ -162,10 +231,13 @@
                   <option value="anime">Anime style</option>
                 </select>
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Special Effects</label>
-                <select id="effects" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <select
+                  id="effects"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                >
                   <option value="none">None</option>
                   <option value="rainbow">Rainbow colors</option>
                   <option value="glowing">Glowing effects</option>
@@ -177,17 +249,17 @@
                 </select>
               </div>
             </div>
-            
+
             <div class="mt-4">
               <label class="flex items-center space-x-2">
-                <input type="checkbox" id="sunglasses" class="w-4 h-4 text-yellow-600">
+                <input type="checkbox" id="sunglasses" class="w-4 h-4 text-yellow-600" />
                 <span class="text-sm font-medium text-gray-700">Add cool sunglasses to ducks</span>
               </label>
             </div>
-            
+
             <div class="mt-2">
               <label class="flex items-center space-x-2">
-                <input type="checkbox" id="hats" class="w-4 h-4 text-yellow-600">
+                <input type="checkbox" id="hats" class="w-4 h-4 text-yellow-600" />
                 <span class="text-sm font-medium text-gray-700">Add fun hats</span>
               </label>
             </div>
@@ -195,8 +267,11 @@
 
           <!-- Generate Button -->
           <div class="text-center">
-            <button type="submit" id="generateBtn" 
-                    class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-colors duration-200 shadow-lg">
+            <button
+              type="submit"
+              id="generateBtn"
+              class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-colors duration-200 shadow-lg"
+            >
               🦆 Generate Duck Background!
             </button>
           </div>
@@ -213,12 +288,18 @@
         <div id="result" class="hidden mt-8">
           <h3 class="text-2xl font-semibold mb-4 text-center">Your Duck Background is Ready! 🎉</h3>
           <div class="bg-gray-100 p-4 rounded-lg">
-            <img id="generatedImage" class="w-full rounded-lg shadow-md mb-4" alt="Generated duck background">
+            <img id="generatedImage" class="w-full rounded-lg shadow-md mb-4" alt="Generated duck background" />
             <div class="text-center space-x-4">
-              <button id="downloadBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
+              <button
+                id="downloadBtn"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+              >
                 📥 Download
               </button>
-              <button id="generateAnother" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors">
+              <button
+                id="generateAnother"
+                class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors"
+              >
                 🔄 Generate Another
               </button>
             </div>
@@ -231,54 +312,52 @@
       // Model options for different providers
       const modelOptions = {
         openai: [
-          { value: 'gpt-image-1', label: 'GPT-4o Image (gpt-image-1)' },
-          { value: 'dall-e-3', label: 'DALL-E 3' },
-          { value: 'dall-e-2', label: 'DALL-E 2' }
+          { value: "gpt-image-1", label: "GPT-4o Image (gpt-image-1)" },
+          { value: "dall-e-3", label: "DALL-E 3" },
+          { value: "dall-e-2", label: "DALL-E 2" },
         ],
-        google: [
-          { value: 'imagen-3.0-generate-002', label: 'Imagen 3' }
-        ]
+        google: [{ value: "imagen-3.0-generate-002", label: "Imagen 3" }],
       };
 
       // DOM elements
-      const form = document.getElementById('duck-form');
-      const providerSelect = document.getElementById('provider');
-      const modelSelect = document.getElementById('model');
-      const apiKeyInput = document.getElementById('apiKey');
-      const apiKeyLabel = document.getElementById('apiKeyLabel');
-      const loadingDiv = document.getElementById('loading');
-      const resultDiv = document.getElementById('result');
-      const generateBtn = document.getElementById('generateBtn');
-      const generatedImage = document.getElementById('generatedImage');
-      const downloadBtn = document.getElementById('downloadBtn');
-      const generateAnotherBtn = document.getElementById('generateAnother');
-      const toggleApiKeyBtn = document.getElementById('toggleApiKey');
-      const eyeClosedPath = document.getElementById('eyeClosedPath');
-      const eyeOpenPath = document.getElementById('eyeOpenPath');
-      const eyeOpenPath2 = document.getElementById('eyeOpenPath2');
-      const countdownElement = document.getElementById('countdown');
-      
+      const form = document.getElementById("duck-form");
+      const providerSelect = document.getElementById("provider");
+      const modelSelect = document.getElementById("model");
+      const apiKeyInput = document.getElementById("apiKey");
+      const apiKeyLabel = document.getElementById("apiKeyLabel");
+      const loadingDiv = document.getElementById("loading");
+      const resultDiv = document.getElementById("result");
+      const generateBtn = document.getElementById("generateBtn");
+      const generatedImage = document.getElementById("generatedImage");
+      const downloadBtn = document.getElementById("downloadBtn");
+      const generateAnotherBtn = document.getElementById("generateAnother");
+      const toggleApiKeyBtn = document.getElementById("toggleApiKey");
+      const eyeClosedPath = document.getElementById("eyeClosedPath");
+      const eyeOpenPath = document.getElementById("eyeOpenPath");
+      const eyeOpenPath2 = document.getElementById("eyeOpenPath2");
+      const countdownElement = document.getElementById("countdown");
+
       let countdownInterval = null;
 
       // Load saved API keys from localStorage
       function loadSavedApiKeys() {
-        const savedOpenAIKey = localStorage.getItem('openai_api_key');
-        const savedGoogleKey = localStorage.getItem('google_api_key');
+        const savedOpenAIKey = localStorage.getItem("openai_api_key");
+        const savedGoogleKey = localStorage.getItem("google_api_key");
         const currentProvider = providerSelect.value;
-        
-        if (currentProvider === 'openai' && savedOpenAIKey) {
+
+        if (currentProvider === "openai" && savedOpenAIKey) {
           apiKeyInput.value = savedOpenAIKey;
-        } else if (currentProvider === 'google' && savedGoogleKey) {
+        } else if (currentProvider === "google" && savedGoogleKey) {
           apiKeyInput.value = savedGoogleKey;
         }
       }
 
       // Save API key to localStorage
       function saveApiKey(provider, apiKey) {
-        if (provider === 'openai') {
-          localStorage.setItem('openai_api_key', apiKey);
-        } else if (provider === 'google') {
-          localStorage.setItem('google_api_key', apiKey);
+        if (provider === "openai") {
+          localStorage.setItem("openai_api_key", apiKey);
+        } else if (provider === "google") {
+          localStorage.setItem("google_api_key", apiKey);
         }
       }
 
@@ -286,20 +365,20 @@
       function updateModelOptions() {
         const provider = providerSelect.value;
         const options = modelOptions[provider];
-        
-        modelSelect.innerHTML = '';
-        options.forEach(option => {
-          const optionElement = document.createElement('option');
+
+        modelSelect.innerHTML = "";
+        options.forEach((option) => {
+          const optionElement = document.createElement("option");
           optionElement.value = option.value;
           optionElement.textContent = option.label;
           modelSelect.appendChild(optionElement);
         });
-        
+
         // Update API key label
-        apiKeyLabel.textContent = provider === 'openai' ? '(OpenAI)' : '(Google Gemini)';
-        
+        apiKeyLabel.textContent = provider === "openai" ? "(OpenAI)" : "(Google Gemini)";
+
         // Clear current key and load saved key for new provider
-        apiKeyInput.value = '';
+        apiKeyInput.value = "";
         loadSavedApiKeys();
       }
 
@@ -309,206 +388,206 @@
         const randomIndex = Math.floor(Math.random() * options.length);
         selectElement.selectedIndex = randomIndex;
       }
-      
+
       // Randomize all select options on page load
       function randomizeAllOptions() {
         // Don't randomize provider - keep it as is for API key functionality
         // Randomize all other selects
-        const selectIds = ['duckCount', 'activity', 'environment', 'style', 'effects'];
-        selectIds.forEach(id => {
+        const selectIds = ["duckCount", "activity", "environment", "style", "effects"];
+        selectIds.forEach((id) => {
           const select = document.getElementById(id);
           if (select) {
             selectRandomOption(select);
           }
         });
       }
-      
+
       // Initialize model options and load saved keys
       updateModelOptions();
       loadSavedApiKeys();
-      providerSelect.addEventListener('change', updateModelOptions);
-      
+      providerSelect.addEventListener("change", updateModelOptions);
+
       // Randomize options on page load
       randomizeAllOptions();
-      
+
       // Save API key on blur/change
-      apiKeyInput.addEventListener('blur', () => {
+      apiKeyInput.addEventListener("blur", () => {
         const apiKey = apiKeyInput.value.trim();
         if (apiKey) {
           saveApiKey(providerSelect.value, apiKey);
         }
       });
-      
-      apiKeyInput.addEventListener('change', () => {
+
+      apiKeyInput.addEventListener("change", () => {
         const apiKey = apiKeyInput.value.trim();
         if (apiKey) {
           saveApiKey(providerSelect.value, apiKey);
         }
       });
-      
+
       // Toggle API key visibility
-      toggleApiKeyBtn.addEventListener('click', () => {
+      toggleApiKeyBtn.addEventListener("click", () => {
         const currentType = apiKeyInput.type;
-        if (currentType === 'password') {
-          apiKeyInput.type = 'text';
-          eyeClosedPath.style.display = 'none';
-          eyeOpenPath.style.display = 'block';
-          eyeOpenPath2.style.display = 'block';
+        if (currentType === "password") {
+          apiKeyInput.type = "text";
+          eyeClosedPath.style.display = "none";
+          eyeOpenPath.style.display = "block";
+          eyeOpenPath2.style.display = "block";
         } else {
-          apiKeyInput.type = 'password';
-          eyeClosedPath.style.display = 'block';
-          eyeOpenPath.style.display = 'none';
-          eyeOpenPath2.style.display = 'none';
+          apiKeyInput.type = "password";
+          eyeClosedPath.style.display = "block";
+          eyeOpenPath.style.display = "none";
+          eyeOpenPath2.style.display = "none";
         }
       });
 
       // Build prompt from form data
       function buildPrompt() {
-        const duckCount = document.getElementById('duckCount').value;
-        const activity = document.getElementById('activity').value;
-        const environment = document.getElementById('environment').value;
-        const style = document.getElementById('style').value;
-        const effects = document.getElementById('effects').value;
-        const sunglasses = document.getElementById('sunglasses').checked;
-        const hats = document.getElementById('hats').checked;
+        const duckCount = document.getElementById("duckCount").value;
+        const activity = document.getElementById("activity").value;
+        const environment = document.getElementById("environment").value;
+        const style = document.getElementById("style").value;
+        const effects = document.getElementById("effects").value;
+        const sunglasses = document.getElementById("sunglasses").checked;
+        const hats = document.getElementById("hats").checked;
 
-        let prompt = `${style} style image of ${duckCount} duck${duckCount !== '1' ? 's' : ''} ${activity} in a ${environment} setting`;
-        
-        if (effects !== 'none') {
+        let prompt = `${style} style image of ${duckCount} duck${duckCount !== "1" ? "s" : ""} ${activity} in a ${environment} setting`;
+
+        if (effects !== "none") {
           prompt += ` with ${effects}`;
         }
-        
+
         if (sunglasses) {
-          prompt += ', wearing cool sunglasses';
+          prompt += ", wearing cool sunglasses";
         }
-        
+
         if (hats) {
-          prompt += ', wearing fun hats';
+          prompt += ", wearing fun hats";
         }
-        
-        prompt += ', optimized for use as a video call background, 1024x1024 resolution, high quality';
-        
+
+        prompt += ", optimized for use as a video call background, 1024x1024 resolution, high quality";
+
         return prompt;
       }
 
       // Handle form submission
-      form.addEventListener('submit', async (e) => {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        
+
         const apiKey = apiKeyInput.value;
         const provider = providerSelect.value;
         const model = modelSelect.value;
-        
+
         if (!apiKey) {
-          alert('Please enter your API key!');
+          alert("Please enter your API key!");
           return;
         }
-        
+
         // Save API key to localStorage
         saveApiKey(provider, apiKey);
-        
+
         const prompt = buildPrompt();
-        
+
         // Show loading state
-        form.style.display = 'none';
-        loadingDiv.classList.remove('hidden');
-        resultDiv.classList.add('hidden');
-        
+        form.style.display = "none";
+        loadingDiv.classList.remove("hidden");
+        resultDiv.classList.add("hidden");
+
         // Start countdown timer
         let timeRemaining = 45;
         countdownElement.textContent = timeRemaining;
-        
+
         countdownInterval = setInterval(() => {
           timeRemaining--;
           if (timeRemaining > 0) {
             countdownElement.textContent = timeRemaining;
           } else if (timeRemaining === 0) {
-            countdownElement.textContent = 'any moment now...';
+            countdownElement.textContent = "any moment now...";
             clearInterval(countdownInterval);
           }
         }, 1000);
-        
+
         try {
           // Create an AbortController with a 2-minute timeout
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minutes
-          
-          const response = await fetch('/api/generate', {
-            method: 'POST',
+
+          const response = await fetch("/api/generate", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
               apiKey,
               provider,
               model,
-              prompt
+              prompt,
             }),
-            signal: controller.signal
+            signal: controller.signal,
           }).finally(() => {
             clearTimeout(timeoutId);
           });
-          
-          console.log('Response status:', response.status);
-          console.log('Response headers:', response.headers);
-          
+
+          console.log("Response status:", response.status);
+          console.log("Response headers:", response.headers);
+
           const responseText = await response.text();
-          console.log('Response text:', responseText);
-          
+          console.log("Response text:", responseText);
+
           let data;
           try {
             data = JSON.parse(responseText);
           } catch (parseError) {
-            console.error('JSON parse error:', parseError);
-            console.error('Response was:', responseText);
-            throw new Error('Server returned invalid JSON. Check console for details.');
+            console.error("JSON parse error:", parseError);
+            console.error("Response was:", responseText);
+            throw new Error("Server returned invalid JSON. Check console for details.");
           }
-          
+
           if (!response.ok) {
-            throw new Error(data.error || 'Failed to generate image');
+            throw new Error(data.error || "Failed to generate image");
           }
-          
-          console.log('API response data:', data);
-          
+
+          console.log("API response data:", data);
+
           if (!data.imageUrl) {
-            throw new Error('No image URL returned from API');
+            throw new Error("No image URL returned from API");
           }
-          
+
           // Show result
           generatedImage.src = data.imageUrl;
-          loadingDiv.classList.add('hidden');
-          resultDiv.classList.remove('hidden');
-          
+          loadingDiv.classList.add("hidden");
+          resultDiv.classList.remove("hidden");
+
           // Clear countdown
           clearInterval(countdownInterval);
-          
         } catch (error) {
-          console.error('Error:', error);
-          
+          console.error("Error:", error);
+
           let errorMessage = error.message;
-          if (error.name === 'AbortError') {
-            errorMessage = 'Request timed out after 2 minutes. Please try again.';
-          } else if (errorMessage.includes('NetworkError') || errorMessage.includes('fetch')) {
-            errorMessage = 'Network error - the image generation is taking longer than expected. Please try again with a simpler prompt or check your connection.';
+          if (error.name === "AbortError") {
+            errorMessage = "Request timed out after 2 minutes. Please try again.";
+          } else if (errorMessage.includes("NetworkError") || errorMessage.includes("fetch")) {
+            errorMessage =
+              "Network error - the image generation is taking longer than expected. Please try again with a simpler prompt or check your connection.";
           }
-          
+
           alert(`Error: ${errorMessage}`);
-          
+
           // Clear countdown
           clearInterval(countdownInterval);
-          
+
           // Reset form
-          loadingDiv.classList.add('hidden');
-          form.style.display = 'block';
-          
+          loadingDiv.classList.add("hidden");
+          form.style.display = "block";
+
           // Reset countdown for next time
-          countdownElement.textContent = '45';
+          countdownElement.textContent = "45";
         }
       });
 
       // Download functionality
-      downloadBtn.addEventListener('click', () => {
-        const link = document.createElement('a');
+      downloadBtn.addEventListener("click", () => {
+        const link = document.createElement("a");
         link.href = generatedImage.src;
         link.download = `duck-background-${Date.now()}.png`;
         document.body.appendChild(link);
@@ -517,11 +596,10 @@
       });
 
       // Generate another
-      generateAnotherBtn.addEventListener('click', () => {
-        resultDiv.classList.add('hidden');
-        form.style.display = 'block';
+      generateAnotherBtn.addEventListener("click", () => {
+        resultDiv.classList.add("hidden");
+        form.style.display = "block";
       });
     </script>
   </body>
 </html>
-
