@@ -1,0 +1,349 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Duck Generator 🦆</title>
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-yellow-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <header class="text-center mb-12">
+        <h1 class="text-6xl font-bold text-yellow-600 mb-4">🦆 Duck Generator</h1>
+        <p class="text-xl text-gray-700">Create amazing duck-themed video backgrounds for your meetings!</p>
+      </header>
+
+      <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+        <form id="duck-form" class="space-y-6">
+          <!-- API Configuration -->
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">🔑 API Configuration</h2>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">AI Provider</label>
+                <select id="provider" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                  <option value="openai">OpenAI (DALL-E / GPT-4o)</option>
+                  <option value="google">Google (Imagen)</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Model</label>
+                <select id="model" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                  <!-- Options populated by JavaScript -->
+                </select>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
+              <input type="password" id="apiKey" placeholder="Enter your API key..." 
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+            </div>
+          </div>
+
+          <!-- Duck Configuration -->
+          <div class="bg-yellow-50 p-6 rounded-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">🦆 Duck Settings</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Ducks</label>
+                <select id="duckCount" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                  <option value="1">1 Duck</option>
+                  <option value="2">2 Ducks</option>
+                  <option value="3">3 Ducks</option>
+                  <option value="5">5 Ducks</option>
+                  <option value="10">10 Ducks</option>
+                  <option value="20">A whole flock (20+)</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Duck Activities</label>
+                <select id="activity" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                  <option value="swimming">Swimming peacefully</option>
+                  <option value="flying">Flying in formation</option>
+                  <option value="dancing">Dancing</option>
+                  <option value="surfing">Surfing</option>
+                  <option value="coding">Coding on laptops</option>
+                  <option value="meeting">In a business meeting</option>
+                  <option value="gaming">Playing video games</option>
+                  <option value="cooking">Cooking</option>
+                  <option value="yoga">Doing yoga</option>
+                  <option value="racing">Racing</option>
+                  <option value="singing">Singing in a choir</option>
+                  <option value="painting">Painting</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Environment -->
+          <div class="bg-green-50 p-6 rounded-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">🌍 Environment</h2>
+            <select id="environment" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              <option value="space">Outer space with stars and planets</option>
+              <option value="beach">Tropical beach with palm trees</option>
+              <option value="forest">Magical forest</option>
+              <option value="underwater">Underwater coral reef</option>
+              <option value="mountains">Snow-capped mountains</option>
+              <option value="desert">Desert with cacti</option>
+              <option value="cityscape">Modern cityscape</option>
+              <option value="farm">Peaceful farm</option>
+              <option value="lake">Serene lake</option>
+              <option value="volcano">Active volcano</option>
+              <option value="arctic">Arctic ice</option>
+              <option value="jungle">Dense jungle</option>
+              <option value="office">Modern office</option>
+              <option value="library">Grand library</option>
+              <option value="kitchen">Cozy kitchen</option>
+              <option value="garden">Beautiful garden</option>
+              <option value="castle">Medieval castle</option>
+              <option value="spaceship">Spaceship interior</option>
+              <option value="pirate">Pirate ship</option>
+              <option value="circus">Colorful circus</option>
+              <option value="concert">Concert stage</option>
+              <option value="museum">Art museum</option>
+              <option value="bakery">Warm bakery</option>
+              <option value="gym">Fitness gym</option>
+              <option value="casino">Las Vegas casino</option>
+              <option value="coffeeshop">Hipster coffee shop</option>
+              <option value="laboratory">Mad scientist lab</option>
+              <option value="dojo">Martial arts dojo</option>
+              <option value="workshop">Santa's workshop</option>
+              <option value="submarine">Yellow submarine</option>
+              <option value="treehouse">Giant treehouse</option>
+              <option value="cloudy">Above the clouds</option>
+              <option value="cyberpunk">Cyberpunk city</option>
+            </select>
+          </div>
+
+          <!-- Fun Options -->
+          <div class="bg-purple-50 p-6 rounded-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">✨ Fun Options</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Duck Style</label>
+                <select id="style" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                  <option value="realistic">Realistic</option>
+                  <option value="cartoon">Cartoon</option>
+                  <option value="pixel">Pixel art</option>
+                  <option value="watercolor">Watercolor painting</option>
+                  <option value="steampunk">Steampunk</option>
+                  <option value="neon">Neon cyberpunk</option>
+                  <option value="vintage">Vintage poster</option>
+                  <option value="anime">Anime style</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Special Effects</label>
+                <select id="effects" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                  <option value="none">None</option>
+                  <option value="rainbow">Rainbow colors</option>
+                  <option value="glowing">Glowing effects</option>
+                  <option value="sparkles">Magical sparkles</option>
+                  <option value="fire">Fire effects</option>
+                  <option value="ice">Ice crystals</option>
+                  <option value="lightning">Lightning bolts</option>
+                  <option value="bubbles">Soap bubbles</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" id="sunglasses" class="w-4 h-4 text-yellow-600">
+                <span class="text-sm font-medium text-gray-700">Add cool sunglasses to ducks</span>
+              </label>
+            </div>
+            
+            <div class="mt-2">
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" id="hats" class="w-4 h-4 text-yellow-600">
+                <span class="text-sm font-medium text-gray-700">Add fun hats</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Generate Button -->
+          <div class="text-center">
+            <button type="submit" id="generateBtn" 
+                    class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-colors duration-200 shadow-lg">
+              🦆 Generate Duck Background!
+            </button>
+          </div>
+        </form>
+
+        <!-- Loading State -->
+        <div id="loading" class="hidden text-center py-8">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+          <p class="mt-4 text-gray-600">Generating your ducky masterpiece...</p>
+        </div>
+
+        <!-- Result -->
+        <div id="result" class="hidden mt-8">
+          <h3 class="text-2xl font-semibold mb-4 text-center">Your Duck Background is Ready! 🎉</h3>
+          <div class="bg-gray-100 p-4 rounded-lg">
+            <img id="generatedImage" class="w-full rounded-lg shadow-md mb-4" alt="Generated duck background">
+            <div class="text-center space-x-4">
+              <button id="downloadBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
+                📥 Download
+              </button>
+              <button id="generateAnother" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors">
+                🔄 Generate Another
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Model options for different providers
+      const modelOptions = {
+        openai: [
+          { value: 'gpt-image-1', label: 'GPT-4o Image (gpt-image-1)' },
+          { value: 'dall-e-3', label: 'DALL-E 3' },
+          { value: 'dall-e-2', label: 'DALL-E 2' }
+        ],
+        google: [
+          { value: 'imagen-3.0-generate-002', label: 'Imagen 3' }
+        ]
+      };
+
+      // DOM elements
+      const form = document.getElementById('duck-form');
+      const providerSelect = document.getElementById('provider');
+      const modelSelect = document.getElementById('model');
+      const loadingDiv = document.getElementById('loading');
+      const resultDiv = document.getElementById('result');
+      const generateBtn = document.getElementById('generateBtn');
+      const generatedImage = document.getElementById('generatedImage');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const generateAnotherBtn = document.getElementById('generateAnother');
+
+      // Update model options when provider changes
+      function updateModelOptions() {
+        const provider = providerSelect.value;
+        const options = modelOptions[provider];
+        
+        modelSelect.innerHTML = '';
+        options.forEach(option => {
+          const optionElement = document.createElement('option');
+          optionElement.value = option.value;
+          optionElement.textContent = option.label;
+          modelSelect.appendChild(optionElement);
+        });
+      }
+
+      // Initialize model options
+      updateModelOptions();
+      providerSelect.addEventListener('change', updateModelOptions);
+
+      // Build prompt from form data
+      function buildPrompt() {
+        const duckCount = document.getElementById('duckCount').value;
+        const activity = document.getElementById('activity').value;
+        const environment = document.getElementById('environment').value;
+        const style = document.getElementById('style').value;
+        const effects = document.getElementById('effects').value;
+        const sunglasses = document.getElementById('sunglasses').checked;
+        const hats = document.getElementById('hats').checked;
+
+        let prompt = `${style} style image of ${duckCount} duck${duckCount !== '1' ? 's' : ''} ${activity} in a ${environment} setting`;
+        
+        if (effects !== 'none') {
+          prompt += ` with ${effects}`;
+        }
+        
+        if (sunglasses) {
+          prompt += ', wearing cool sunglasses';
+        }
+        
+        if (hats) {
+          prompt += ', wearing fun hats';
+        }
+        
+        prompt += ', optimized for use as a video call background, 1024x1024 resolution, high quality';
+        
+        return prompt;
+      }
+
+      // Handle form submission
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const apiKey = document.getElementById('apiKey').value;
+        const provider = providerSelect.value;
+        const model = modelSelect.value;
+        
+        if (!apiKey) {
+          alert('Please enter your API key!');
+          return;
+        }
+        
+        const prompt = buildPrompt();
+        
+        // Show loading state
+        form.style.display = 'none';
+        loadingDiv.classList.remove('hidden');
+        resultDiv.classList.add('hidden');
+        
+        try {
+          const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              apiKey,
+              provider,
+              model,
+              prompt
+            }),
+          });
+          
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.error || 'Failed to generate image');
+          }
+          
+          // Show result
+          generatedImage.src = data.imageUrl;
+          loadingDiv.classList.add('hidden');
+          resultDiv.classList.remove('hidden');
+          
+        } catch (error) {
+          console.error('Error:', error);
+          alert(`Error: ${error.message}`);
+          
+          // Reset form
+          loadingDiv.classList.add('hidden');
+          form.style.display = 'block';
+        }
+      });
+
+      // Download functionality
+      downloadBtn.addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.href = generatedImage.src;
+        link.download = `duck-background-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+
+      // Generate another
+      generateAnotherBtn.addEventListener('click', () => {
+        resultDiv.classList.add('hidden');
+        form.style.display = 'block';
+      });
+    </script>
+  </body>
+</html>
+
