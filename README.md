@@ -13,6 +13,7 @@ A fun web app for generating duck-themed video backgrounds using AI image genera
 - ✨ **Special Effects**: Rainbow, glowing, sparkles, fire, and more
 - 🔐 **Secure**: API keys stored only in browser localStorage
 - 📱 **Responsive**: Works on desktop and mobile devices
+- 🗂 **Image Feed**: Generated ducks are stored in Cloudflare R2 and shown on the home page
 
 ## Live Demo
 
@@ -74,6 +75,10 @@ This runs the site with Cloudflare Workers locally on [http://localhost:3000](ht
    - Build command: `npm run build`
    - Build output directory: `dist`
 5. Deploy!
+
+### Object Storage
+
+Attach a Cloudflare R2 bucket named `duck-images` and expose it to the Worker as the `DUCK_IMAGES` binding.
 
 ### Custom Domain
 

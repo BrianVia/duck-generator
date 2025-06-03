@@ -1,5 +1,10 @@
 name = "duck-generator"
 compatibility_date = "2024-01-01"
 
+[[r2_buckets]]
+binding = "DUCK_IMAGES"
+bucket_name = "duck-images"
+preview_bucket_name = "duck-images"
+
 [env.production.vars]
 ENVIRONMENT = "production"
