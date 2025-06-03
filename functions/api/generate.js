@@ -13,6 +13,7 @@ export const onRequestPost = async (context) => {
     }
 
     let imageUrl;
+    let storedKey;
 
     if (provider === 'openai') {
       const requestBody = {
@@ -80,8 +81,26 @@ export const onRequestPost = async (context) => {
       });
     }
 
-    return new Response(JSON.stringify({ imageUrl }), {
-      headers: { 
+    const bucket = context.env.DUCK_IMAGES;
+    try {
+      if (bucket) {
+        let data;
+        if (imageUrl.startsWith('data:')) {
+          const base64 = imageUrl.split(',')[1];
+          data = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+        } else {
+          const imgResp = await fetch(imageUrl);
+          data = new Uint8Array(await imgResp.arrayBuffer());
+        }
+        storedKey = `duck-${Date.now()}.png`;
+        await bucket.put(storedKey, data, { httpMetadata: { contentType: 'image/png' } });
+      }
+    } catch (e) {
+      console.error('R2 upload error:', e);
+    }
+
+    return new Response(JSON.stringify({ imageUrl, storedKey }), {
+      headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST',

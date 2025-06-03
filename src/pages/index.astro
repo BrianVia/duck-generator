@@ -326,6 +326,11 @@
           </div>
         </div>
       </div>
+
+      <section id="feed" class="mt-12">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Recent Ducks</h2>
+        <div id="feed-container" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+      </section>
     </div>
 
     <script>
@@ -356,8 +361,28 @@
       const eyeOpenPath = document.getElementById("eyeOpenPath");
       const eyeOpenPath2 = document.getElementById("eyeOpenPath2");
       const countdownElement = document.getElementById("countdown");
+      const feedContainer = document.getElementById("feed-container");
 
       let countdownInterval = null;
+
+      async function loadFeed() {
+        if (!feedContainer) return;
+        try {
+          const res = await fetch("/api/feed");
+          const data = await res.json();
+          (data.images || []).forEach((url) => {
+            const img = document.createElement("img");
+            img.src = url;
+            img.alt = "Recent duck";
+            img.className = "w-full h-auto rounded";
+            feedContainer.appendChild(img);
+          });
+        } catch (e) {
+          console.error("Feed load error", e);
+        }
+      }
+
+      loadFeed();
 
       // Load saved API keys from localStorage
       function loadSavedApiKeys() {
