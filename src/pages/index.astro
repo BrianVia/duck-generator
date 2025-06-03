@@ -37,7 +37,18 @@
             </div>
             
             <div class="mt-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">API Key <span id="apiKeyLabel">(OpenAI)</span></label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                API Key <span id="apiKeyLabel">(OpenAI)</span>
+                <span class="relative inline-block ml-1 group">
+                  <svg class="w-4 h-4 inline-block text-gray-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span class="absolute z-10 invisible group-hover:visible bg-gray-800 text-white text-xs rounded-lg py-2 px-3 bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 text-center">
+                    Your API key is stored only in your browser's local storage and is never sent to our servers. It's passed directly to OpenAI/Google's APIs.
+                    <svg class="absolute text-gray-800 h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255"><polygon class="fill-current" points="0,0 127.5,127.5 255,0"/></svg>
+                  </span>
+                </span>
+              </label>
               <div class="relative">
                 <input type="password" id="apiKey" placeholder="Enter your API key..." 
                        class="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
@@ -195,6 +206,7 @@
         <div id="loading" class="hidden text-center py-8">
           <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
           <p class="mt-4 text-gray-600">Generating your ducky masterpiece...</p>
+          <p class="mt-2 text-gray-500 text-sm">Estimated time remaining: <span id="countdown">45</span> seconds</p>
         </div>
 
         <!-- Result -->
@@ -244,6 +256,9 @@
       const eyeClosedPath = document.getElementById('eyeClosedPath');
       const eyeOpenPath = document.getElementById('eyeOpenPath');
       const eyeOpenPath2 = document.getElementById('eyeOpenPath2');
+      const countdownElement = document.getElementById('countdown');
+      
+      let countdownInterval = null;
 
       // Load saved API keys from localStorage
       function loadSavedApiKeys() {
@@ -288,10 +303,33 @@
         loadSavedApiKeys();
       }
 
+      // Function to select random option from a select element
+      function selectRandomOption(selectElement) {
+        const options = selectElement.options;
+        const randomIndex = Math.floor(Math.random() * options.length);
+        selectElement.selectedIndex = randomIndex;
+      }
+      
+      // Randomize all select options on page load
+      function randomizeAllOptions() {
+        // Don't randomize provider - keep it as is for API key functionality
+        // Randomize all other selects
+        const selectIds = ['duckCount', 'activity', 'environment', 'style', 'effects'];
+        selectIds.forEach(id => {
+          const select = document.getElementById(id);
+          if (select) {
+            selectRandomOption(select);
+          }
+        });
+      }
+      
       // Initialize model options and load saved keys
       updateModelOptions();
       loadSavedApiKeys();
       providerSelect.addEventListener('change', updateModelOptions);
+      
+      // Randomize options on page load
+      randomizeAllOptions();
       
       // Save API key on blur/change
       apiKeyInput.addEventListener('blur', () => {
@@ -305,6 +343,22 @@
         const apiKey = apiKeyInput.value.trim();
         if (apiKey) {
           saveApiKey(providerSelect.value, apiKey);
+        }
+      });
+      
+      // Toggle API key visibility
+      toggleApiKeyBtn.addEventListener('click', () => {
+        const currentType = apiKeyInput.type;
+        if (currentType === 'password') {
+          apiKeyInput.type = 'text';
+          eyeClosedPath.style.display = 'none';
+          eyeOpenPath.style.display = 'block';
+          eyeOpenPath2.style.display = 'block';
+        } else {
+          apiKeyInput.type = 'password';
+          eyeClosedPath.style.display = 'block';
+          eyeOpenPath.style.display = 'none';
+          eyeOpenPath2.style.display = 'none';
         }
       });
 
@@ -360,6 +414,19 @@
         loadingDiv.classList.remove('hidden');
         resultDiv.classList.add('hidden');
         
+        // Start countdown timer
+        let timeRemaining = 45;
+        countdownElement.textContent = timeRemaining;
+        
+        countdownInterval = setInterval(() => {
+          timeRemaining--;
+          if (timeRemaining >= 0) {
+            countdownElement.textContent = timeRemaining;
+          } else {
+            clearInterval(countdownInterval);
+          }
+        }, 1000);
+        
         try {
           const response = await fetch('/api/generate', {
             method: 'POST',
@@ -404,13 +471,22 @@
           loadingDiv.classList.add('hidden');
           resultDiv.classList.remove('hidden');
           
+          // Clear countdown
+          clearInterval(countdownInterval);
+          
         } catch (error) {
           console.error('Error:', error);
           alert(`Error: ${error.message}`);
           
+          // Clear countdown
+          clearInterval(countdownInterval);
+          
           // Reset form
           loadingDiv.classList.add('hidden');
           form.style.display = 'block';
+          
+          // Reset countdown for next time
+          countdownElement.textContent = '45';
         }
       });
 
