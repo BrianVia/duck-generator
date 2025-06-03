@@ -420,14 +420,19 @@
         
         countdownInterval = setInterval(() => {
           timeRemaining--;
-          if (timeRemaining >= 0) {
+          if (timeRemaining > 0) {
             countdownElement.textContent = timeRemaining;
-          } else {
+          } else if (timeRemaining === 0) {
+            countdownElement.textContent = 'any moment now...';
             clearInterval(countdownInterval);
           }
         }, 1000);
         
         try {
+          // Create an AbortController with a 2-minute timeout
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minutes
+          
           const response = await fetch('/api/generate', {
             method: 'POST',
             headers: {
@@ -439,6 +444,9 @@
               model,
               prompt
             }),
+            signal: controller.signal
+          }).finally(() => {
+            clearTimeout(timeoutId);
           });
           
           console.log('Response status:', response.status);
@@ -476,7 +484,15 @@
           
         } catch (error) {
           console.error('Error:', error);
-          alert(`Error: ${error.message}`);
+          
+          let errorMessage = error.message;
+          if (error.name === 'AbortError') {
+            errorMessage = 'Request timed out after 2 minutes. Please try again.';
+          } else if (errorMessage.includes('NetworkError') || errorMessage.includes('fetch')) {
+            errorMessage = 'Network error - the image generation is taking longer than expected. Please try again with a simpler prompt or check your connection.';
+          }
+          
+          alert(`Error: ${errorMessage}`);
           
           // Clear countdown
           clearInterval(countdownInterval);
