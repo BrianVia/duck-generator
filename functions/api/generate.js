@@ -23,7 +23,7 @@ export const onRequestPost = async (context) => {
         size: '1024x1024'
       };
       
-      // Only add response_format for DALL-E models
+      // Only add response_format for DALL-E models (not gpt-image-1)
       if (model === 'dall-e-2' || model === 'dall-e-3') {
         requestBody.response_format = 'url';
       }
