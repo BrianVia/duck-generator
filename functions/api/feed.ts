@@ -46,20 +46,30 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   });
 
   const images: string[] = [];
+  
+  // Using custom domain for R2 bucket
+  const R2_PUBLIC_URL = 'https://images.duckgenerator.com';
+  
   for (const obj of objects) {
-    const file = await bucket.get(obj.key);
-    if (file) {
-      const data = await file.arrayBuffer();
-      const uint8Array = new Uint8Array(data);
-      let binaryString = '';
-      for (let i = 0; i < uint8Array.length; i++) {
-        binaryString += String.fromCharCode(uint8Array[i]);
-      }
-      const b64 = btoa(binaryString);
-      const contentType = file.httpMetadata?.contentType || 'image/png';
-      images.push(`data:${contentType};base64,${b64}`);
-    }
+    // Just return the public URL - much faster than base64
+    images.push(`${R2_PUBLIC_URL}/${obj.key}`);
   }
+  
+  // Option 2: If you prefer base64 (slower, no CDN benefits)
+  // for (const obj of objects) {
+  //   const file = await bucket.get(obj.key);
+  //   if (file) {
+  //     const data = await file.arrayBuffer();
+  //     const uint8Array = new Uint8Array(data);
+  //     let binaryString = '';
+  //     for (let i = 0; i < uint8Array.length; i++) {
+  //       binaryString += String.fromCharCode(uint8Array[i]);
+  //     }
+  //     const b64 = btoa(binaryString);
+  //     const contentType = file.httpMetadata?.contentType || 'image/png';
+  //     images.push(`data:${contentType};base64,${b64}`);
+  //   }
+  // }
 
   return new Response(JSON.stringify({ images }), {
     headers: {
