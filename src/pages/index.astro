@@ -553,9 +553,9 @@
         }, 1000);
 
         try {
-          // Create an AbortController with a 2-minute timeout
+          // Create an AbortController with a 3-minute timeout
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minutes
+          const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minutes
 
           const response = await fetch("/api/generate", {
             method: "POST",
@@ -610,7 +610,7 @@
 
           let errorMessage = error.message;
           if (error.name === "AbortError") {
-            errorMessage = "Request timed out after 2 minutes. Please try again.";
+            errorMessage = "Request timed out after 3 minutes. Please try again.";
           } else if (errorMessage.includes("NetworkError") || errorMessage.includes("fetch")) {
             errorMessage =
               "Network error - the image generation is taking longer than expected. Please try again with a simpler prompt or check your connection.";

@@ -9,7 +9,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "pages:dev": "npm run build && cp -r functions dist/ && wrangler pages dev dist --port 3000",
-    "deploy": "wrangler pages deploy dist"
+    "deploy": "wrangler pages deploy dist",
+    "pages:build": "rm -rf dist && mkdir -p dist && cp -r public/* dist/ 2>/dev/null || true && cp -r functions dist/",
+    "pages:deploy": "npm run pages:build && wrangler pages deploy dist"
   },
   "dependencies": {
     "astro": "^4.0.0",

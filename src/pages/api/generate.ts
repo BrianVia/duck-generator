@@ -9,7 +9,7 @@ interface GenerateRequest {
   prompt: string;
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body: GenerateRequest = await request.json();
     
@@ -37,6 +37,9 @@ export const POST: APIRoute = async ({ request }) => {
         requestBody.response_format = 'url';
       }
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minutes
+
       const response = await fetch('https://api.openai.com/v1/images/generations', {
         method: 'POST',
         headers: {
@@ -44,7 +47,8 @@ export const POST: APIRoute = async ({ request }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestBody),
-      });
+        signal: controller.signal
+      }).finally(() => clearTimeout(timeoutId));
 
       if (!response.ok) {
         const error = await response.json();
@@ -68,6 +72,9 @@ export const POST: APIRoute = async ({ request }) => {
       }
 
     } else if (provider === 'google') {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minutes
+
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateImages?key=${apiKey}`, {
         method: 'POST',
         headers: {
@@ -77,7 +84,8 @@ export const POST: APIRoute = async ({ request }) => {
           prompt: prompt,
           number_of_images: 1
         }),
-      });
+        signal: controller.signal
+      }).finally(() => clearTimeout(timeoutId));
 
       if (!response.ok) {
         const error = await response.json();
@@ -98,6 +106,54 @@ export const POST: APIRoute = async ({ request }) => {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
+    }
+
+    // Upload to R2 if bucket is available
+    const runtime = locals.runtime as any;
+    const bucket = runtime?.env?.DUCK_IMAGES;
+    
+    if (bucket && imageUrl) {
+      try {
+        let imageData: ArrayBuffer;
+        
+        // Handle different image URL formats
+        if (imageUrl.startsWith('data:')) {
+          // Extract base64 data
+          const base64Data = imageUrl.split(',')[1];
+          const binaryString = atob(base64Data);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          imageData = bytes.buffer;
+        } else {
+          // Fetch image from URL
+          const imageResponse = await fetch(imageUrl);
+          imageData = await imageResponse.arrayBuffer();
+        }
+        
+        // Generate unique filename
+        const timestamp = Date.now();
+        const filename = `duck-${timestamp}.png`;
+        
+        // Upload to R2
+        await bucket.put(filename, imageData, {
+          httpMetadata: {
+            contentType: 'image/png'
+          },
+          customMetadata: {
+            prompt: prompt,
+            provider: provider,
+            model: model,
+            generated: new Date().toISOString()
+          }
+        });
+        
+        console.log(`Image uploaded to R2: ${filename}`);
+      } catch (uploadError) {
+        console.error('Failed to upload to R2:', uploadError);
+        // Don't fail the request if R2 upload fails
+      }
     }
 
     return new Response(JSON.stringify({ imageUrl }), {
