@@ -29,6 +29,25 @@
       </header>
 
       <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+        <!-- Mode Toggle -->
+        <div class="flex justify-center mb-6 space-x-4">
+          <button id="guidedModeBtn" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">
+            🎯 Guided Mode
+          </button>
+          <button id="advancedModeBtn" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg">
+            ✏️ Advanced Mode
+          </button>
+          <button id="storyModeBtn" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg">
+            📖 Story Mode
+          </button>
+        </div>
+
+        <!-- Smart Suggestions -->
+        <div id="smartSuggestions" class="mb-4 p-4 bg-blue-50 rounded-lg hidden">
+          <p class="text-sm font-medium text-blue-800 mb-2">💡 Suggestions based on time of day:</p>
+          <div id="suggestionButtons" class="flex flex-wrap gap-2"></div>
+        </div>
+
         <form id="duck-form" class="space-y-6">
           <!-- API Configuration -->
           <div class="bg-gray-50 p-6 rounded-lg">
@@ -144,149 +163,229 @@
             </div>
           </div>
 
-          <!-- Duck Configuration -->
-          <div class="bg-yellow-50 p-6 rounded-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">🦆 Duck Settings</h2>
+          <!-- Guided Mode Options -->
+          <div id="guidedOptions">
+            <!-- Duck Configuration -->
+            <div class="bg-yellow-50 p-6 rounded-lg">
+              <h2 class="text-2xl font-semibold mb-4 text-gray-800">🦆 Duck Settings</h2>
 
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Ducks</label>
-                <select
-                  id="duckCount"
-                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                >
-                  <option value="1">1 Duck</option>
-                  <option value="2">2 Ducks</option>
-                  <option value="3">3 Ducks</option>
-                  <option value="5">5 Ducks</option>
-                  <option value="10">10 Ducks</option>
-                  <option value="20">A whole flock (20+)</option>
-                </select>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Number of Ducks</label>
+                  <select
+                    id="duckCount"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  >
+                    <option value="1">1 Duck</option>
+                    <option value="2">2 Ducks</option>
+                    <option value="3">3 Ducks</option>
+                    <option value="5">5 Ducks</option>
+                    <option value="10">10 Ducks</option>
+                    <option value="20">A whole flock (20+)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Duck Activities</label>
+                  <select
+                    id="activity"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  >
+                    <option value="swimming">Swimming peacefully</option>
+                    <option value="flying">Flying in formation</option>
+                    <option value="dancing">Dancing</option>
+                    <option value="surfing">Surfing</option>
+                    <option value="coding">Coding on laptops</option>
+                    <option value="meeting">In a business meeting</option>
+                    <option value="gaming">Playing video games</option>
+                    <option value="cooking">Cooking</option>
+                    <option value="yoga">Doing yoga</option>
+                    <option value="racing">Racing</option>
+                    <option value="singing">Singing in a choir</option>
+                    <option value="painting">Painting</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Environment -->
+            <div class="bg-green-50 p-6 rounded-lg">
+              <h2 class="text-2xl font-semibold mb-4 text-gray-800">🌍 Environment</h2>
+              <select
+                id="environment"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              >
+                <option value="space">Outer space with stars and planets</option>
+                <option value="beach">Tropical beach with palm trees</option>
+                <option value="forest">Magical forest</option>
+                <option value="underwater">Underwater coral reef</option>
+                <option value="mountains">Snow-capped mountains</option>
+                <option value="desert">Desert with cacti</option>
+                <option value="cityscape">Modern cityscape</option>
+                <option value="farm">Peaceful farm</option>
+                <option value="lake">Serene lake</option>
+                <option value="volcano">Active volcano</option>
+                <option value="arctic">Arctic ice</option>
+                <option value="jungle">Dense jungle</option>
+                <option value="office">Modern office</option>
+                <option value="library">Grand library</option>
+                <option value="kitchen">Cozy kitchen</option>
+                <option value="garden">Beautiful garden</option>
+                <option value="castle">Medieval castle</option>
+                <option value="spaceship">Spaceship interior</option>
+                <option value="pirate">Pirate ship</option>
+                <option value="circus">Colorful circus</option>
+                <option value="concert">Concert stage</option>
+                <option value="museum">Art museum</option>
+                <option value="bakery">Warm bakery</option>
+                <option value="gym">Fitness gym</option>
+                <option value="casino">Las Vegas casino</option>
+                <option value="coffeeshop">Hipster coffee shop</option>
+                <option value="laboratory">Mad scientist lab</option>
+                <option value="dojo">Martial arts dojo</option>
+                <option value="workshop">Santa's workshop</option>
+                <option value="submarine">Yellow submarine</option>
+                <option value="treehouse">Giant treehouse</option>
+                <option value="cloudy">Above the clouds</option>
+                <option value="cyberpunk">Cyberpunk city</option>
+              </select>
+            </div>
+
+            <!-- Fun Options -->
+            <div class="bg-purple-50 p-6 rounded-lg">
+              <h2 class="text-2xl font-semibold mb-4 text-gray-800">✨ Fun Options</h2>
+
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Duck Style</label>
+                  <select
+                    id="style"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  >
+                    <option value="realistic">Realistic</option>
+                    <option value="cartoon">Cartoon</option>
+                    <option value="pixel">Pixel art</option>
+                    <option value="watercolor">Watercolor painting</option>
+                    <option value="steampunk">Steampunk</option>
+                    <option value="neon">Neon cyberpunk</option>
+                    <option value="vintage">Vintage poster</option>
+                    <option value="anime">Anime style</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Special Effects</label>
+                  <select
+                    id="effects"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  >
+                    <option value="none">None</option>
+                    <option value="rainbow">Rainbow colors</option>
+                    <option value="glowing">Glowing effects</option>
+                    <option value="sparkles">Magical sparkles</option>
+                    <option value="fire">Fire effects</option>
+                    <option value="ice">Ice crystals</option>
+                    <option value="lightning">Lightning bolts</option>
+                    <option value="bubbles">Soap bubbles</option>
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Duck Activities</label>
-                <select
-                  id="activity"
-                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                >
-                  <option value="swimming">Swimming peacefully</option>
-                  <option value="flying">Flying in formation</option>
-                  <option value="dancing">Dancing</option>
-                  <option value="surfing">Surfing</option>
-                  <option value="coding">Coding on laptops</option>
-                  <option value="meeting">In a business meeting</option>
-                  <option value="gaming">Playing video games</option>
-                  <option value="cooking">Cooking</option>
-                  <option value="yoga">Doing yoga</option>
-                  <option value="racing">Racing</option>
-                  <option value="singing">Singing in a choir</option>
-                  <option value="painting">Painting</option>
-                </select>
+              <div class="mt-4">
+                <label class="flex items-center space-x-2">
+                  <input type="checkbox" id="sunglasses" class="w-4 h-4 text-yellow-600" />
+                  <span class="text-sm font-medium text-gray-700">Add cool sunglasses to ducks</span>
+                </label>
+              </div>
+
+              <div class="mt-2">
+                <label class="flex items-center space-x-2">
+                  <input type="checkbox" id="hats" class="w-4 h-4 text-yellow-600" />
+                  <span class="text-sm font-medium text-gray-700">Add fun hats</span>
+                </label>
               </div>
             </div>
           </div>
 
-          <!-- Environment -->
-          <div class="bg-green-50 p-6 rounded-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">🌍 Environment</h2>
-            <select
-              id="environment"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+          <!-- Advanced Mode -->
+          <div id="advancedMode" class="hidden">
+            <div class="bg-gray-50 p-6 rounded-lg">
+              <h2 class="text-2xl font-semibold mb-4 text-gray-800">✏️ Custom Prompt</h2>
+              <textarea
+                id="customPrompt"
+                rows="4"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Describe your perfect duck scene in detail..."
+              ></textarea>
+              <p class="text-sm text-gray-500 mt-2">Tip: Be specific about style, setting, and activities!</p>
+            </div>
+          </div>
+
+          <!-- Story Mode -->
+          <div id="storyMode" class="hidden">
+            <div class="bg-pink-50 p-6 rounded-lg">
+              <h2 class="text-2xl font-semibold mb-4 text-gray-800">📖 Duck Story Generator</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Story Theme</label>
+                  <select id="storyTheme" class="w-full p-3 border border-gray-300 rounded-lg">
+                    <option value="adventure">Epic Adventure</option>
+                    <option value="mystery">Mystery Detective</option>
+                    <option value="romance">Love Story</option>
+                    <option value="comedy">Comedy Series</option>
+                    <option value="scifi">Sci-Fi Journey</option>
+                    <option value="fairy-tale">Fairy Tale</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Number of Chapters</label>
+                  <select id="chapterCount" class="w-full p-3 border border-gray-300 rounded-lg">
+                    <option value="3">3 Chapters (Quick Story)</option>
+                    <option value="5">5 Chapters (Short Story)</option>
+                    <option value="8">8 Chapters (Full Story)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Main Character Name</label>
+                  <input
+                    type="text"
+                    id="characterName"
+                    placeholder="Captain Quackers"
+                    class="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Batch Options -->
+          <div class="bg-orange-50 p-4 rounded-lg">
+            <label class="flex items-center space-x-2">
+              <input type="checkbox" id="batchMode" class="w-4 h-4 text-orange-600" />
+              <span class="text-sm font-medium text-gray-700">Generate 4 variations (Batch Mode)</span>
+            </label>
+          </div>
+
+          <!-- Favorite Presets -->
+          <div class="bg-indigo-50 p-4 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-sm font-medium text-gray-700">⭐ Favorite Presets</h3>
+              <button type="button" id="savePresetBtn" class="text-xs bg-indigo-500 text-white px-3 py-1 rounded">
+                Save Current
+              </button>
+            </div>
+            <div id="presetList" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <!-- Generate Buttons -->
+          <div class="flex justify-center space-x-4">
+            <button
+              type="button"
+              id="surpriseBtn"
+              class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-6 rounded-xl text-lg transition-colors duration-200 shadow-lg"
             >
-              <option value="space">Outer space with stars and planets</option>
-              <option value="beach">Tropical beach with palm trees</option>
-              <option value="forest">Magical forest</option>
-              <option value="underwater">Underwater coral reef</option>
-              <option value="mountains">Snow-capped mountains</option>
-              <option value="desert">Desert with cacti</option>
-              <option value="cityscape">Modern cityscape</option>
-              <option value="farm">Peaceful farm</option>
-              <option value="lake">Serene lake</option>
-              <option value="volcano">Active volcano</option>
-              <option value="arctic">Arctic ice</option>
-              <option value="jungle">Dense jungle</option>
-              <option value="office">Modern office</option>
-              <option value="library">Grand library</option>
-              <option value="kitchen">Cozy kitchen</option>
-              <option value="garden">Beautiful garden</option>
-              <option value="castle">Medieval castle</option>
-              <option value="spaceship">Spaceship interior</option>
-              <option value="pirate">Pirate ship</option>
-              <option value="circus">Colorful circus</option>
-              <option value="concert">Concert stage</option>
-              <option value="museum">Art museum</option>
-              <option value="bakery">Warm bakery</option>
-              <option value="gym">Fitness gym</option>
-              <option value="casino">Las Vegas casino</option>
-              <option value="coffeeshop">Hipster coffee shop</option>
-              <option value="laboratory">Mad scientist lab</option>
-              <option value="dojo">Martial arts dojo</option>
-              <option value="workshop">Santa's workshop</option>
-              <option value="submarine">Yellow submarine</option>
-              <option value="treehouse">Giant treehouse</option>
-              <option value="cloudy">Above the clouds</option>
-              <option value="cyberpunk">Cyberpunk city</option>
-            </select>
-          </div>
-
-          <!-- Fun Options -->
-          <div class="bg-purple-50 p-6 rounded-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">✨ Fun Options</h2>
-
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Duck Style</label>
-                <select
-                  id="style"
-                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                >
-                  <option value="realistic">Realistic</option>
-                  <option value="cartoon">Cartoon</option>
-                  <option value="pixel">Pixel art</option>
-                  <option value="watercolor">Watercolor painting</option>
-                  <option value="steampunk">Steampunk</option>
-                  <option value="neon">Neon cyberpunk</option>
-                  <option value="vintage">Vintage poster</option>
-                  <option value="anime">Anime style</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Special Effects</label>
-                <select
-                  id="effects"
-                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                >
-                  <option value="none">None</option>
-                  <option value="rainbow">Rainbow colors</option>
-                  <option value="glowing">Glowing effects</option>
-                  <option value="sparkles">Magical sparkles</option>
-                  <option value="fire">Fire effects</option>
-                  <option value="ice">Ice crystals</option>
-                  <option value="lightning">Lightning bolts</option>
-                  <option value="bubbles">Soap bubbles</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="mt-4">
-              <label class="flex items-center space-x-2">
-                <input type="checkbox" id="sunglasses" class="w-4 h-4 text-yellow-600" />
-                <span class="text-sm font-medium text-gray-700">Add cool sunglasses to ducks</span>
-              </label>
-            </div>
-
-            <div class="mt-2">
-              <label class="flex items-center space-x-2">
-                <input type="checkbox" id="hats" class="w-4 h-4 text-yellow-600" />
-                <span class="text-sm font-medium text-gray-700">Add fun hats</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Generate Button -->
-          <div class="text-center">
+              🎲 Surprise Me!
+            </button>
             <button
               type="submit"
               id="generateBtn"
@@ -302,12 +401,15 @@
           <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
           <p class="mt-4 text-gray-600">Generating your ducky masterpiece...</p>
           <p class="mt-2 text-gray-500 text-sm">Estimated time remaining: <span id="countdown">45</span> seconds</p>
+          <div id="batchProgress" class="hidden mt-4">
+            <p class="text-sm text-gray-600">Generating variation <span id="currentBatch">1</span> of 4...</p>
+          </div>
         </div>
 
         <!-- Result -->
         <div id="result" class="hidden mt-8">
           <h3 class="text-2xl font-semibold mb-4 text-center">Your Duck Background is Ready! 🎉</h3>
-          <div class="bg-gray-100 p-4 rounded-lg">
+          <div id="singleResult" class="bg-gray-100 p-4 rounded-lg">
             <img id="generatedImage" class="w-full rounded-lg shadow-md mb-4" alt="Generated duck background" />
             <div class="text-center space-x-4">
               <button
@@ -324,6 +426,28 @@
               </button>
             </div>
           </div>
+          
+          <!-- Batch Results -->
+          <div id="batchResults" class="hidden">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div id="batchContainer"></div>
+            </div>
+            <div class="text-center">
+              <button id="downloadAllBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
+                📥 Download All
+              </button>
+            </div>
+          </div>
+
+          <!-- Story Results -->
+          <div id="storyResults" class="hidden">
+            <div id="storyContainer" class="space-y-6"></div>
+            <div class="text-center mt-6">
+              <button id="downloadStoryBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
+                📥 Download Story
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -337,7 +461,7 @@
       // Model options for different providers
       const modelOptions = {
         openai: [
-          { value: "gpt-image-1", label: "GPT-4o Image" },
+          { value: "gpt-image-1", label: "GPT-4o Image (gpt-image-1)" },
           { value: "dall-e-3", label: "DALL-E 3" },
           { value: "dall-e-2", label: "DALL-E 2" },
         ],
@@ -363,7 +487,228 @@
       const countdownElement = document.getElementById("countdown");
       const feedContainer = document.getElementById("feed-container");
 
+      // New feature elements
+      const guidedModeBtn = document.getElementById("guidedModeBtn");
+      const advancedModeBtn = document.getElementById("advancedModeBtn");
+      const storyModeBtn = document.getElementById("storyModeBtn");
+      const guidedOptions = document.getElementById("guidedOptions");
+      const advancedMode = document.getElementById("advancedMode");
+      const storyMode = document.getElementById("storyMode");
+      const surpriseBtn = document.getElementById("surpriseBtn");
+      const batchModeCheckbox = document.getElementById("batchMode");
+      const savePresetBtn = document.getElementById("savePresetBtn");
+      const presetList = document.getElementById("presetList");
+      const smartSuggestions = document.getElementById("smartSuggestions");
+      const suggestionButtons = document.getElementById("suggestionButtons");
+
       let countdownInterval = null;
+      let currentMode = 'guided';
+
+      // Mode switching
+      guidedModeBtn.addEventListener('click', () => {
+        currentMode = 'guided';
+        guidedModeBtn.classList.add('bg-yellow-500', 'text-white');
+        guidedModeBtn.classList.remove('bg-gray-300', 'text-gray-700');
+        advancedModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+        advancedModeBtn.classList.remove('bg-yellow-500', 'text-white');
+        storyModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+        storyModeBtn.classList.remove('bg-yellow-500', 'text-white');
+        
+        guidedOptions.classList.remove('hidden');
+        advancedMode.classList.add('hidden');
+        storyMode.classList.add('hidden');
+        batchModeCheckbox.parentElement.parentElement.classList.remove('hidden');
+      });
+
+      advancedModeBtn.addEventListener('click', () => {
+        currentMode = 'advanced';
+        advancedModeBtn.classList.add('bg-yellow-500', 'text-white');
+        advancedModeBtn.classList.remove('bg-gray-300', 'text-gray-700');
+        guidedModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+        guidedModeBtn.classList.remove('bg-yellow-500', 'text-white');
+        storyModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+        storyModeBtn.classList.remove('bg-yellow-500', 'text-white');
+        
+        guidedOptions.classList.add('hidden');
+        advancedMode.classList.remove('hidden');
+        storyMode.classList.add('hidden');
+        batchModeCheckbox.parentElement.parentElement.classList.remove('hidden');
+      });
+
+      storyModeBtn.addEventListener('click', () => {
+        currentMode = 'story';
+        storyModeBtn.classList.add('bg-yellow-500', 'text-white');
+        storyModeBtn.classList.remove('bg-gray-300', 'text-gray-700');
+        guidedModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+        guidedModeBtn.classList.remove('bg-yellow-500', 'text-white');
+        advancedModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+        advancedModeBtn.classList.remove('bg-yellow-500', 'text-white');
+        
+        guidedOptions.classList.add('hidden');
+        advancedMode.classList.add('hidden');
+        storyMode.classList.remove('hidden');
+        batchModeCheckbox.parentElement.parentElement.classList.add('hidden');
+      });
+
+      // Smart suggestions based on time
+      function getTimeSuggestions() {
+        const hour = new Date().getHours();
+        const suggestions = [];
+        
+        if (hour < 6) {
+          suggestions.push(
+            { activity: 'sleeping', environment: 'bedroom', effects: 'sparkles' },
+            { activity: 'flying', environment: 'space', effects: 'glowing' }
+          );
+        } else if (hour < 12) {
+          suggestions.push(
+            { activity: 'swimming', environment: 'lake', effects: 'bubbles' },
+            { activity: 'cooking', environment: 'kitchen', effects: 'none' }
+          );
+        } else if (hour < 17) {
+          suggestions.push(
+            { activity: 'meeting', environment: 'office', effects: 'none' },
+            { activity: 'coding', environment: 'coffeeshop', effects: 'none' }
+          );
+        } else {
+          suggestions.push(
+            { activity: 'dancing', environment: 'concert', effects: 'rainbow' },
+            { activity: 'gaming', environment: 'cyberpunk', effects: 'neon' }
+          );
+        }
+        
+        return suggestions;
+      }
+
+      function showSuggestions() {
+        const suggestions = getTimeSuggestions();
+        suggestionButtons.innerHTML = '';
+        
+        suggestions.forEach(suggestion => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200';
+          btn.textContent = `${suggestion.activity} in ${suggestion.environment}`;
+          btn.addEventListener('click', () => {
+            document.getElementById('activity').value = suggestion.activity;
+            document.getElementById('environment').value = suggestion.environment;
+            document.getElementById('effects').value = suggestion.effects;
+          });
+          suggestionButtons.appendChild(btn);
+        });
+        
+        smartSuggestions.classList.remove('hidden');
+      }
+
+      // Show suggestions on page load
+      showSuggestions();
+
+      // Surprise Me functionality
+      surpriseBtn.addEventListener('click', () => {
+        randomizeAllOptions();
+        document.getElementById('sunglasses').checked = Math.random() > 0.5;
+        document.getElementById('hats').checked = Math.random() > 0.5;
+        
+        // Optionally auto-submit
+        form.dispatchEvent(new Event('submit'));
+      });
+
+      // Preset functionality
+      function loadPresets() {
+        const presets = JSON.parse(localStorage.getItem('duckPresets') || '[]');
+        presetList.innerHTML = '';
+        
+        presets.forEach((preset, index) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm hover:bg-indigo-200';
+          btn.textContent = preset.name;
+          btn.addEventListener('click', () => loadPreset(preset));
+          
+          const deleteBtn = document.createElement('span');
+          deleteBtn.className = 'ml-1 text-red-500 cursor-pointer';
+          deleteBtn.textContent = '×';
+          deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deletePreset(index);
+          });
+          
+          btn.appendChild(deleteBtn);
+          presetList.appendChild(btn);
+        });
+      }
+
+      function savePreset() {
+        const name = prompt('Name your preset:');
+        if (!name) return;
+        
+        const preset = {
+          name,
+          duckCount: document.getElementById('duckCount').value,
+          activity: document.getElementById('activity').value,
+          environment: document.getElementById('environment').value,
+          style: document.getElementById('style').value,
+          effects: document.getElementById('effects').value,
+          sunglasses: document.getElementById('sunglasses').checked,
+          hats: document.getElementById('hats').checked
+        };
+        
+        const presets = JSON.parse(localStorage.getItem('duckPresets') || '[]');
+        presets.push(preset);
+        localStorage.setItem('duckPresets', JSON.stringify(presets));
+        loadPresets();
+      }
+
+      function loadPreset(preset) {
+        document.getElementById('duckCount').value = preset.duckCount;
+        document.getElementById('activity').value = preset.activity;
+        document.getElementById('environment').value = preset.environment;
+        document.getElementById('style').value = preset.style;
+        document.getElementById('effects').value = preset.effects;
+        document.getElementById('sunglasses').checked = preset.sunglasses;
+        document.getElementById('hats').checked = preset.hats;
+      }
+
+      function deletePreset(index) {
+        const presets = JSON.parse(localStorage.getItem('duckPresets') || '[]');
+        presets.splice(index, 1);
+        localStorage.setItem('duckPresets', JSON.stringify(presets));
+        loadPresets();
+      }
+
+      savePresetBtn.addEventListener('click', savePreset);
+      loadPresets();
+
+      // Story mode prompts generator
+      function generateStoryPrompts(theme, chapters, characterName) {
+        const character = characterName || 'Captain Quackers';
+        const storyTemplates = {
+          adventure: [
+            `${character} the brave duck discovering a mysterious map`,
+            `${character} navigating through dangerous waters`,
+            `${character} finding the hidden treasure`,
+            `${character} escaping from pirate ducks`,
+            `${character} celebrating victory with duck friends`
+          ],
+          mystery: [
+            `Detective ${character} examining clues at the crime scene`,
+            `${character} interviewing suspicious duck witnesses`,
+            `${character} discovering a secret passage`,
+            `${character} confronting the villain`,
+            `${character} solving the case and explaining the mystery`
+          ],
+          romance: [
+            `${character} meeting a beautiful duck at the pond`,
+            `${character} preparing for the first date`,
+            `${character} dancing under the moonlight`,
+            `${character} having a misunderstanding`,
+            `${character} proposing with a lily pad ring`
+          ]
+        };
+        
+        const template = storyTemplates[theme] || storyTemplates.adventure;
+        return template.slice(0, parseInt(chapters));
+      }
 
       async function loadFeed() {
         if (!feedContainer) return;
@@ -488,6 +833,10 @@
 
       // Build prompt from form data
       function buildPrompt() {
+        if (currentMode === 'advanced') {
+          return document.getElementById('customPrompt').value;
+        }
+        
         const duckCount = document.getElementById("duckCount").value;
         const activity = document.getElementById("activity").value;
         const environment = document.getElementById("environment").value;
@@ -531,15 +880,42 @@
         // Save API key to localStorage
         saveApiKey(provider, apiKey);
 
-        const prompt = buildPrompt();
+        // Handle different modes
+        if (currentMode === 'story') {
+          await generateStory(apiKey, provider, model);
+          return;
+        }
+
+        const isBatchMode = batchModeCheckbox.checked && currentMode !== 'story';
+        const prompts = [];
+
+        if (isBatchMode) {
+          // Generate 4 variations
+          for (let i = 0; i < 4; i++) {
+            const basePrompt = buildPrompt();
+            const variations = [
+              ' from different angle',
+              ' with different lighting',
+              ' in action',
+              ' close-up view'
+            ];
+            prompts.push(basePrompt + variations[i]);
+          }
+        } else {
+          prompts.push(buildPrompt());
+        }
 
         // Show loading state
         form.style.display = "none";
         loadingDiv.classList.remove("hidden");
         resultDiv.classList.add("hidden");
+        
+        if (isBatchMode) {
+          document.getElementById('batchProgress').classList.remove('hidden');
+        }
 
         // Start countdown timer
-        let timeRemaining = 45;
+        let timeRemaining = isBatchMode ? 180 : 45;
         countdownElement.textContent = timeRemaining;
 
         countdownInterval = setInterval(() => {
@@ -553,97 +929,201 @@
         }, 1000);
 
         try {
-          // Create an AbortController with a 3-minute timeout
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minutes
+          const results = [];
+          
+          for (let i = 0; i < prompts.length; i++) {
+            if (isBatchMode) {
+              document.getElementById('currentBatch').textContent = i + 1;
+            }
+            
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 120000);
 
-          const response = await fetch("/api/generate", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              apiKey,
-              provider,
-              model,
-              prompt,
-            }),
-            signal: controller.signal,
-          }).finally(() => {
-            clearTimeout(timeoutId);
-          });
+            const response = await fetch("/api/generate", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                apiKey,
+                provider,
+                model,
+                prompt: prompts[i],
+              }),
+              signal: controller.signal,
+            }).finally(() => {
+              clearTimeout(timeoutId);
+            });
 
-          console.log("Response status:", response.status);
-          console.log("Response headers:", response.headers);
+            const responseText = await response.text();
+            const data = JSON.parse(responseText);
 
-          const responseText = await response.text();
-          console.log("Response text:", responseText);
+            if (!response.ok) {
+              throw new Error(data.error || "Failed to generate image");
+            }
 
-          let data;
-          try {
-            data = JSON.parse(responseText);
-          } catch (parseError) {
-            console.error("JSON parse error:", parseError);
-            console.error("Response was:", responseText);
-            throw new Error("Server returned invalid JSON. Check console for details.");
+            results.push(data.imageUrl);
           }
 
-          if (!response.ok) {
-            throw new Error(data.error || "Failed to generate image");
-          }
-
-          console.log("API response data:", data);
-
-          if (!data.imageUrl) {
-            throw new Error("No image URL returned from API");
-          }
-
-          // Show result
-          generatedImage.src = data.imageUrl;
+          // Show results
           loadingDiv.classList.add("hidden");
           resultDiv.classList.remove("hidden");
+          
+          if (isBatchMode) {
+            showBatchResults(results);
+          } else {
+            generatedImage.src = results[0];
+            document.getElementById('singleResult').classList.remove('hidden');
+            document.getElementById('batchResults').classList.add('hidden');
+          }
 
-          // Clear countdown
           clearInterval(countdownInterval);
         } catch (error) {
           console.error("Error:", error);
-
-          let errorMessage = error.message;
-          if (error.name === "AbortError") {
-            errorMessage = "Request timed out after 3 minutes. Please try again.";
-          } else if (errorMessage.includes("NetworkError") || errorMessage.includes("fetch")) {
-            errorMessage =
-              "Network error - the image generation is taking longer than expected. Please try again with a simpler prompt or check your connection.";
-          }
-
-          alert(`Error: ${errorMessage}`);
-
-          // Clear countdown
+          alert(`Error: ${error.message}`);
           clearInterval(countdownInterval);
-
-          // Reset form
           loadingDiv.classList.add("hidden");
           form.style.display = "block";
-
-          // Reset countdown for next time
           countdownElement.textContent = "45";
         }
       });
 
+      // Show batch results
+      function showBatchResults(imageUrls) {
+        document.getElementById('singleResult').classList.add('hidden');
+        document.getElementById('batchResults').classList.remove('hidden');
+        
+        const container = document.getElementById('batchContainer');
+        container.innerHTML = '';
+        
+        imageUrls.forEach((url, index) => {
+          const div = document.createElement('div');
+          div.className = 'bg-gray-100 p-2 rounded-lg';
+          
+          const img = document.createElement('img');
+          img.src = url;
+          img.className = 'w-full rounded-lg shadow-md mb-2';
+          img.alt = `Duck variation ${index + 1}`;
+          
+          const downloadBtn = document.createElement('button');
+          downloadBtn.className = 'w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm';
+          downloadBtn.textContent = `Download #${index + 1}`;
+          downloadBtn.addEventListener('click', () => downloadImage(url, `duck-${index + 1}.png`));
+          
+          div.appendChild(img);
+          div.appendChild(downloadBtn);
+          container.appendChild(div);
+        });
+      }
+
+      // Generate story
+      async function generateStory(apiKey, provider, model) {
+        const theme = document.getElementById('storyTheme').value;
+        const chapters = document.getElementById('chapterCount').value;
+        const characterName = document.getElementById('characterName').value;
+        
+        const prompts = generateStoryPrompts(theme, chapters, characterName);
+        
+        // Show loading
+        form.style.display = "none";
+        loadingDiv.classList.remove("hidden");
+        resultDiv.classList.add("hidden");
+        
+        const results = [];
+        
+        for (let i = 0; i < prompts.length; i++) {
+          document.getElementById('currentBatch').textContent = `Chapter ${i + 1}`;
+          document.getElementById('batchProgress').classList.remove('hidden');
+          
+          const response = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              apiKey,
+              provider,
+              model,
+              prompt: prompts[i] + " in consistent art style, 1024x1024"
+            })
+          });
+          
+          const data = await response.json();
+          results.push({
+            image: data.imageUrl,
+            caption: prompts[i]
+          });
+        }
+        
+        showStoryResults(results);
+        loadingDiv.classList.add("hidden");
+        resultDiv.classList.remove("hidden");
+      }
+
+      // Show story results
+      function showStoryResults(chapters) {
+        document.getElementById('singleResult').classList.add('hidden');
+        document.getElementById('batchResults').classList.add('hidden');
+        document.getElementById('storyResults').classList.remove('hidden');
+        
+        const container = document.getElementById('storyContainer');
+        container.innerHTML = '';
+        
+        chapters.forEach((chapter, index) => {
+          const div = document.createElement('div');
+          div.className = 'bg-gray-100 p-4 rounded-lg';
+          
+          const title = document.createElement('h4');
+          title.className = 'text-lg font-semibold mb-2';
+          title.textContent = `Chapter ${index + 1}`;
+          
+          const img = document.createElement('img');
+          img.src = chapter.image;
+          img.className = 'w-full rounded-lg shadow-md mb-2';
+          
+          const caption = document.createElement('p');
+          caption.className = 'text-sm text-gray-600 italic';
+          caption.textContent = chapter.caption;
+          
+          div.appendChild(title);
+          div.appendChild(img);
+          div.appendChild(caption);
+          container.appendChild(div);
+        });
+      }
+
       // Download functionality
-      downloadBtn.addEventListener("click", () => {
+      function downloadImage(url, filename) {
         const link = document.createElement("a");
-        link.href = generatedImage.src;
-        link.download = `duck-background-${Date.now()}.png`;
+        link.href = url;
+        link.download = filename || `duck-background-${Date.now()}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+      }
+
+      downloadBtn.addEventListener("click", () => {
+        downloadImage(generatedImage.src);
+      });
+
+      // Download all batch images
+      document.getElementById('downloadAllBtn').addEventListener('click', () => {
+        const images = document.querySelectorAll('#batchContainer img');
+        images.forEach((img, index) => {
+          setTimeout(() => {
+            downloadImage(img.src, `duck-batch-${index + 1}.png`);
+          }, index * 500);
+        });
+      });
+
+      // Download story as PDF (simplified version)
+      document.getElementById('downloadStoryBtn').addEventListener('click', () => {
+        alert('Story download would create a PDF with all chapters. This requires a PDF library to implement fully.');
       });
 
       // Generate another
       generateAnotherBtn.addEventListener("click", () => {
         resultDiv.classList.add("hidden");
         form.style.display = "block";
+        document.getElementById('batchProgress').classList.add('hidden');
       });
     </script>
   </body>
