@@ -16,14 +16,34 @@ type PagesFunction<E = unknown> = (context: {
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const bucket = context.env.DUCK_IMAGES;
+  
+  console.log('Feed Debug:', {
+    hasBucket: !!bucket,
+    envKeys: Object.keys(context.env || {}),
+    bucketType: bucket ? typeof bucket : 'undefined'
+  });
+  
   if (!bucket) {
-    return new Response(JSON.stringify({ images: [] }), {
+    console.log('No R2 bucket available - returning empty array');
+    return new Response(JSON.stringify({ 
+      images: [], 
+      debug: { 
+        message: 'No R2 bucket binding found',
+        envKeys: Object.keys(context.env || {})
+      }
+    }), {
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   }
 
   const list = await bucket.list();
   const objects = list.objects.sort((a, b) => b.uploaded.getTime() - a.uploaded.getTime()).slice(0, 20);
+
+  console.log('R2 Bucket contents:', {
+    totalObjects: list.objects.length,
+    objectKeys: list.objects.map(obj => obj.key),
+    truncated: list.truncated
+  });
 
   const images: string[] = [];
   for (const obj of objects) {
